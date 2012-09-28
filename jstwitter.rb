@@ -11,7 +11,7 @@ class JSTwitter
 	def initialize
 		puts "Initializing"
 		@client = JumpstartAuth.twitter
-		@k = Klout::AIP.new("6f2zva63qwtan3hgwvesa7b8")
+		@k = Klout::API.new('6f2zva63qwtan3hgwvesa7b8')
 	end
 
 	def tweet(message)
@@ -95,12 +95,24 @@ class JSTwitter
 		puts "Shortening this URL: #{original_url}"
 		puts bitly.shorten("#{original_url}").short_url
 		return bitly.shorten("#{original_url}").short_url
-	end	
+	end
+
+	def klout_score
+		friends = @client.friends.collect{|f| f.screen_name}
+		friends.each do |friend|
+			# print friend's screen name
+			puts friend
+			# print friend's klout score
+			puts @k.klout("#{friend}")["users"][0]["kscore"]
+			puts "" # Print a blank line to separate each friend
+		end
+	end
 end
 
 # Script
 jst = JSTwitter.new
-jst.run
+#jst.run
+jst.klout_score
 
 
 
